@@ -2,6 +2,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Input } from "../../components";
 import useAuth from "../../hooks/useAuth";
+import { showToast } from "../../components/Toast";
 
 type UserCredentials = {
   email: string;
@@ -35,15 +36,17 @@ const Register = () => {
     try {
       const { email, password } = state;
       await register(email, password);
+      showToast("Account created", "success");
     } catch (e) {
       console.error(e);
+      showToast("Failed to create account", "error");
     } finally {
       setLoader(false);
     }
   };
 
   return (
-    <div className="h-full flex items-center justify-center">
+    <div className="h-full flex items-center justify-center px-4">
       <div className="flex flex-col w-full items-center gap-8">
         <h4 className="text-md text-zinc-200">Cloud Nest</h4>
         <h4 className="font-bold text-4xl">Get Started</h4>
@@ -71,7 +74,12 @@ const Register = () => {
               placeholder="••••••••••••"
               helperText="Password must be 8 characters long"
             />
-            <Button type="submit" onClick={handleRegister} disabled={loader}>
+            <Button
+              type="submit"
+              onClick={handleRegister}
+              disabled={loader}
+              className="w-full"
+            >
               Register
             </Button>
             <p className="text-sm text-white">

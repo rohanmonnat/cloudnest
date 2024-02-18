@@ -12,9 +12,12 @@
   "dependencies": {
     "clsx": "^2.1.0",
     "firebase": "^10.8.0",
+    "lucide-react": "^0.331.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.1"
+    "react-hot-toast": "^2.4.1",
+    "react-router-dom": "^6.22.1",
+    "tailwind-merge": "^2.2.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.55",

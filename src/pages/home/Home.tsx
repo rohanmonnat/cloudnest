@@ -1,31 +1,26 @@
-import { Button } from "../../components";
-import useAuth from "../../hooks/useAuth";
-import useLoader from "../../hooks/useLoader";
+import { useEffect } from "react";
+import FileUploader from "../../components/home/FileUploader";
+import { listAllImages } from "../../lib/storage";
 
 const Home = () => {
-  const { user, logout } = useAuth();
-  const { loader, setLoader } = useLoader(false);
-  console.log(user);
+  useEffect(() => {
+    const fetchFiles = async () => {
+      const [error, files] = await listAllImages();
 
-  const handleLogout = async () => {
-    setLoader(true);
-    try {
-      await logout();
-      console.log("logged out");
-    } catch (e) {
-      alert("error");
-      console.error(e);
-    } finally {
-      setLoader(false);
-    }
-  };
+      if (error) {
+        return;
+      }
+      console.log(files);
+    };
+
+    fetchFiles();
+  }, []);
 
   return (
-    <div>
-      Home page
-      <Button onClick={handleLogout} disabled={loader}>
-        Logout
-      </Button>
+    <div className="p-4 h-full ">
+      <div className="rounded-md bg-zinc-800 h-full p-4">
+        <FileUploader />
+      </div>
     </div>
   );
 };

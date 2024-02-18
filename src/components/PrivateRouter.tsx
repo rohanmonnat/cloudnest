@@ -1,5 +1,6 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import HomeLayout from "./layout/HomeLayout";
 
 const PrivateRoute = () => {
   const { user, loader } = useAuth();
@@ -12,7 +13,7 @@ const PrivateRoute = () => {
     return <Navigate to="/auth/login" />;
   }
 
-  return <Outlet />;
+  return <HomeLayout />;
 };
 
 export default PrivateRoute;

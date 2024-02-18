@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Input } from "../../components";
 import useAuth from "../../hooks/useAuth";
 import useLoader from "../../hooks/useLoader";
+import { showToast } from "../../components/Toast";
 
 type UserCredentials = {
   email: string;
@@ -34,16 +35,18 @@ const Login = () => {
     try {
       const { email, password } = state;
       await login(email, password);
+      showToast("Logged in successfully", "success");
       navigate("/");
     } catch (e) {
       console.error(e);
+      showToast("Failed to log in", "error");
     } finally {
       setLoader(false);
     }
   };
 
   return (
-    <div className="h-full flex items-center justify-center">
+    <div className="h-full flex items-center justify-center px-4">
       <div className="flex flex-col w-full items-center gap-8">
         <h4 className="text-md text-zinc-200">Cloud Nest</h4>
         <h4 className="font-bold text-4xl">Welcome back</h4>
@@ -63,7 +66,12 @@ const Login = () => {
               label="Password"
               placeholder="••••••••••••"
             />
-            <Button type="submit" onClick={handleLogin} disabled={loader}>
+            <Button
+              type="submit"
+              onClick={handleLogin}
+              disabled={loader}
+              className="w-full"
+            >
               Submit
             </Button>
             <p className="text-sm text-white">

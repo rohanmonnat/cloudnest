@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
-import AuthSkeleton from "../components/AuthSkeleton";
+import AuthSkeleton from "../AuthSkeleton";
 
 const AuthLayout = () => {
   return (

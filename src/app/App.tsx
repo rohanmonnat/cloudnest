@@ -5,24 +5,23 @@ import {
   RouterProvider,
   Route,
 } from "react-router-dom";
-
-import Layout from "./Layout";
 import { AuthProvider } from "../contexts/auth";
-import AuthLayout from "./AuthLayout";
-import PrivateRoute from "../components/PrivateRouter";
-import Home from "../pages/home/Home";
+import Layout from "../components/layout/Layout";
+import AuthRoute from "../components/layout/AuthRoute";
+import ProtectedRoute from "../components/layout/ProtectedRoute";
 
 const NotFound = lazy(() => import("../pages/NotFound"));
 const Login = lazy(() => import("../pages/auth/Login"));
 const Register = lazy(() => import("../pages/auth/Register"));
+const Home = lazy(() => import("../pages/home/Home"));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
-      <Route element={<PrivateRoute />}>
+      <Route element={<ProtectedRoute />}>
         <Route index element={<Home />} />
       </Route>
-      <Route path="auth" element={<AuthLayout />}>
+      <Route path="auth" element={<AuthRoute />}>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
       </Route>
