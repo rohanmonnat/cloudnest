@@ -16,7 +16,7 @@ const Button = forwardRef<Ref, ButtonProps>(
         ref={ref}
         {...restProps}
         className={clsx(
-          "w-full px-4 py-2 outline-none rounded-md text-sm bg-zinc-50 text-zinc-900 hover:bg-zinc-200s disabled:bg-zinc-300 disabled:cursor-not-allowed",
+          "w-full px-4 py-2 outline-none rounded-md text-sm bg-zinc-50 text-zinc-900 hover:bg-zinc-200 disabled:bg-zinc-300 disabled:cursor-not-allowed",
           className
         )}
       >
