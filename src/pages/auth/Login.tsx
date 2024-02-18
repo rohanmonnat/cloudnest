@@ -4,10 +4,47 @@ import { Button, Input } from "../../components";
 import useAuth from "../../hooks/useAuth";
 import useLoader from "../../hooks/useLoader";
 import { showToast } from "../../components/Toast";
+import { z } from "zod";
+import { FirebaseError } from "firebase/app";
 
 type UserCredentials = {
   email: string;
   password: string;
+};
+
+const schema = z.object({
+  email: z
+    .string({
+      required_error: "Email is required",
+      invalid_type_error: "Invalid email",
+    })
+    .email({ message: "Invalid email" })
+    .min(5, { message: "Email must be atleat 5 characters long" })
+    .trim(),
+  password: z.coerce
+    .string({
+      required_error: "Password is required",
+      invalid_type_error: "Invalid password",
+    })
+    .min(8, { message: "Password must be atleast 8 characters long" })
+    .trim(),
+});
+
+type FormatedError = z.ZodFormattedError<{
+  email: string;
+  password: string;
+}>;
+
+const getFlatSchemaError = (
+  error: FormatedError | null,
+  key: "email" | "password"
+) => {
+  const errors = error?.[key]?._errors;
+  if (!errors) {
+    return;
+  }
+
+  return errors[0];
 };
 
 const Login = () => {
@@ -15,6 +52,8 @@ const Login = () => {
     email: "",
     password: "",
   });
+
+  const [formErrors, setFormErrors] = useState<null | FormatedError>(null);
 
   const { loader, setLoader } = useLoader(false);
   const navigate = useNavigate();
@@ -30,16 +69,32 @@ const Login = () => {
   };
 
   const handleLogin = async (event: FormEvent<HTMLButtonElement>) => {
+    setFormErrors(null);
     event.preventDefault();
     setLoader(true);
     try {
-      const { email, password } = state;
+      const result = schema.safeParse(state);
+
+      if (!result.success) {
+        setFormErrors(result.error.format());
+        return;
+      }
+
+      const { email, password } = result.data;
       await login(email, password);
       showToast("Logged in successfully", "success");
       navigate("/");
     } catch (e) {
+      const errorCode = (e as FirebaseError).code;
+      switch (errorCode) {
+        case "auth/invalid-credential":
+          showToast("Invalid email or password", "error", 3000);
+          break;
+
+        default:
+          showToast("Failed to log in", "error", 3000);
+      }
       console.error(e);
-      showToast("Failed to log in", "error");
     } finally {
       setLoader(false);
     }
@@ -58,6 +113,9 @@ const Login = () => {
               value={state.email}
               label="Email"
               placeholder="john.doe@example.com"
+              type="email"
+              error={Boolean(getFlatSchemaError(formErrors, "email"))}
+              helperText={getFlatSchemaError(formErrors, "email")}
             />
             <Input
               name="password"
@@ -65,6 +123,9 @@ const Login = () => {
               value={state.password}
               label="Password"
               placeholder="••••••••••••"
+              type="password"
+              error={Boolean(getFlatSchemaError(formErrors, "password"))}
+              helperText={getFlatSchemaError(formErrors, "password")}
             />
             <Button
               type="submit"

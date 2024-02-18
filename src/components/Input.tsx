@@ -10,7 +10,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   labelProps?: LabelHTMLAttributes<HTMLLabelElement>;
   helperText?: string;
-  error?: string;
+  error?: boolean;
 }
 
 type Ref = HTMLInputElement;
